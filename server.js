@@ -17,7 +17,14 @@ dotenv.config();
 const app = express();
 const upload = multer();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(express.json());
 
 // 🔌 MongoDB
@@ -26,6 +33,10 @@ connectDB();
 app.use("/auth", authRoutes);
 app.use("/workouts", workoutRoutes);
 app.use("/api/ai", coachRoutes);
+
+const ML_BASE_URL = "https://fitnessml-jl9a.onrender.com"
+// const ML_BASE_URL= "http://localhost:8000"
+
 
 app.post("/ml/analyze", upload.single("file"), async (req, res) => {
   try {
@@ -46,13 +57,13 @@ app.post("/ml/analyze", upload.single("file"), async (req, res) => {
     form.append("age", String(age));
 
     const response = await axios.post(
-      "http://127.0.0.1:8000/analyze-frame",
+      `${ML_BASE_URL}/analyze-frame`,
       form,
       {
         headers: {
           ...form.getHeaders(),
         },
-        timeout: 15000,
+        timeout: 20000,
       }
     );
 
@@ -71,7 +82,7 @@ app.post("/ml/reset", async (req, res) => {
     form.append("exercise", exercise);
 
     const response = await axios.post(
-      "http://127.0.0.1:8000/reset",
+      `${ML_BASE_URL}/reset`,
       form,
       { headers: form.getHeaders() }
     );
