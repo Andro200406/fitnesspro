@@ -34,8 +34,8 @@ app.use("/auth", authRoutes);
 app.use("/workouts", workoutRoutes);
 app.use("/api/ai", coachRoutes);
 
-const ML_BASE_URL = "https://fitnessml-jl9a.onrender.com"
-// const ML_BASE_URL= "http://localhost:8000"
+// const ML_BASE_URL = "https://fitnessml-jl9a.onrender.com"
+const ML_BASE_URL= "http://localhost:8000"
 
 
 app.post("/ml/analyze", upload.single("file"), async (req, res) => {
