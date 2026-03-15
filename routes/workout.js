@@ -46,35 +46,26 @@ router.get("/latest", protect, async (req, res) => {
 
 
 router.get("/stats", protect, async (req, res) => {
-    const now = new Date();
+  const workouts = await Workout.find({
+    user: req.user._id
+  }).sort({ createdAt: -1 });
 
-    const startOfWeek = new Date(Date.UTC(
-        now.getUTCFullYear(),
-        now.getUTCMonth(),
-        now.getUTCDate() - now.getUTCDay(),
-        0, 0, 0
-    ));
+  const totalCalories = workouts.reduce(
+    (s, w) => s + (w.totalCalories || 0),
+    0
+  );
 
-    const workouts = await Workout.find({
-        user: req.user._id,
-        createdAt: { $gte: startOfWeek },
-    }).sort({ createdAt: 1 });
+  const avgAccuracy =
+    workouts.reduce((s, w) => s + (w.accuracy || 0), 0) /
+    (workouts.length || 1);
 
-    const totalCalories = workouts.reduce((s, w) => s + w.totalCalories, 0);
-    const avgAccuracy =
-        workouts.reduce((s, w) => s + w.accuracy, 0) / (workouts.length || 1);
-
-    console.log("Found workouts:", workouts.length);
-
-
-    res.json({
-        workoutsCount: workouts.length,
-        totalCalories: Math.round(totalCalories),
-        avgAccuracy: Math.round(avgAccuracy),
-        workouts,
-    });
+  res.json({
+    workoutsCount: workouts.length,
+    totalCalories: Math.round(totalCalories),
+    avgAccuracy: Math.round(avgAccuracy),
+    workouts,
+  });
 });
-
 
 
 export default router;

@@ -73,6 +73,8 @@ router.post("/coach", async (req, res) => {
       return res.status(400).json({ error: "Missing message or userProfile" });
     }
 
+    console.log("User Profile:", userProfile);
+
     const language = detectLanguage(message);
 
     const languageInstruction = {
@@ -185,9 +187,12 @@ await ChatMessage.create([
 
     res.json({ reply });
 
+    console.log("OpenRouter Key Exists:", !!process.env.OPENROUTER_KEY);
 
   } catch (err) {
     console.error("❌ AI COACH ERROR:", err.response?.data || err.message);
+    console.error("❌ FULL AI ERROR:", err.response?.data || err);
+    
     res.status(500).json({ error: "AI Coach unavailable" });
   }
 });

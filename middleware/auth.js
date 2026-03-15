@@ -26,6 +26,9 @@ export const protect = async (req, res, next) => {
     // 5️⃣ Attach user to request (THIS is what your API needs)
     req.user = user;
 
+    console.log("Decoded ID:", decoded.id);
+    console.log("User from DB:", user);
+
 
     next(); // 🚀 continue to route
   } catch (err) {
