@@ -9,7 +9,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENROUTER_KEY,
   baseURL: "https://openrouter.ai/api/v1",
   defaultHeaders: {
-    "HTTP-Referer": "http://localhost:5173",
+    "HTTP-Referer": "https://fitness-pro-frontend-rust.vercel.app/",
     "X-Title": "AI Fitness Coach",
   },
 });
